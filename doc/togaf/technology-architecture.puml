@@ -1,0 +1,156 @@
+@startuml 技术架构图
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js 技术架构图 (TOGAF Technology Architecture)
+
+package "应用技术层" {
+  [Node.js核心] as NodeCore
+  [JavaScript API] as JSAPI
+  [内置模块] as BuiltinModules
+}
+
+package "运行时技术层" {
+  [V8 JavaScript引擎] as V8Engine
+  [JIT编译器] as JITCompiler
+  [垃圾回收器] as GC
+  [快照机制] as Snapshot
+  [libuv事件循环] as Libuv
+  [事件循环] as EventLoop
+  [线程池] as ThreadPool
+  [异步I/O] as AsyncIO
+  [N-API绑定层] as NAPI
+  [C++绑定] as CppBindings
+  [原生接口] as NativeInterface
+}
+
+package "系统技术层" {
+  [操作系统接口] as OSInterface
+  [Linux接口] as LinuxAPI
+  [Windows接口] as WindowsAPI
+  [macOS接口] as MacOSAPI
+  [网络协议栈] as NetworkStack
+  [TCP/UDP] as TCPUDP
+  [HTTP/HTTPS] as HTTPStack
+  [TLS/SSL] as TLSStack
+  [文件系统接口] as FSInterface
+  [文件操作] as FileOps
+  [目录操作] as DirOps
+  [文件监控] as FileWatch
+}
+
+package "基础设施层" {
+  [构建系统] as BuildSystem
+  [GYP构建] as GYP
+  [GN构建] as GN
+  [CMake] as CMake
+  [测试框架] as TestFramework
+  [单元测试] as UnitTest
+  [集成测试] as IntegrationTest
+  [基准测试] as Benchmark
+  [CI/CD系统] as CICD
+  [持续集成] as CI
+  [持续部署] as CD
+  [自动化测试] as AutoTest
+}
+
+package "技术标准层" {
+  [ECMAScript标准] as ECMAScript
+  [HTTP标准] as HTTPStandard
+  [TLS标准] as TLSStandard
+  [Web标准] as WebStandard
+}
+
+' 应用技术层依赖
+NodeCore --> JSAPI
+JSAPI --> BuiltinModules
+BuiltinModules --> V8Engine
+BuiltinModules --> Libuv
+
+' 运行时技术层依赖
+V8Engine --> JITCompiler
+V8Engine --> GC
+V8Engine --> Snapshot
+Libuv --> EventLoop
+Libuv --> ThreadPool
+Libuv --> AsyncIO
+NAPI --> CppBindings
+NAPI --> NativeInterface
+CppBindings --> V8Engine
+NativeInterface --> Libuv
+
+' 系统技术层依赖
+OSInterface --> LinuxAPI
+OSInterface --> WindowsAPI
+OSInterface --> MacOSAPI
+NetworkStack --> TCPUDP
+NetworkStack --> HTTPStack
+NetworkStack --> TLSStack
+FSInterface --> FileOps
+FSInterface --> DirOps
+FSInterface --> FileWatch
+
+Libuv --> OSInterface
+Libuv --> NetworkStack
+Libuv --> FSInterface
+NodeCore --> OSInterface
+
+' 基础设施层依赖
+BuildSystem --> GYP
+BuildSystem --> GN
+BuildSystem --> CMake
+TestFramework --> UnitTest
+TestFramework --> IntegrationTest
+TestFramework --> Benchmark
+CICD --> CI
+CICD --> CD
+CICD --> AutoTest
+BuildSystem --> NodeCore
+TestFramework --> NodeCore
+CICD --> TestFramework
+
+BuildSystem --> NodeCore
+TestFramework --> NodeCore
+CICD --> TestFramework
+
+' 技术标准层关系
+ECMAScript --> V8Engine
+HTTPStandard --> HTTPStack
+TLSStandard --> TLSStack
+WebStandard --> JSAPI
+
+note right of V8Engine
+  **V8引擎特性**
+  - 即时编译 (JIT)
+  - 优化的垃圾回收
+  - 快照启动优化
+  - 多代GC策略
+end note
+
+note right of Libuv
+  **libuv事件循环**
+  - 跨平台异步I/O
+  - 线程池管理
+  - 文件系统操作
+  - 网络I/O抽象
+end note
+
+note right of BuildSystem
+  **构建系统**
+  - GYP: 传统构建系统
+  - GN: 现代构建系统
+  - 多平台支持
+  - 增量构建
+end note
+
+note right of OSInterface
+  **跨平台支持**
+  - Linux: epoll
+  - Windows: IOCP
+  - macOS: kqueue
+  - 统一抽象接口
+end note
+
+@enduml
+

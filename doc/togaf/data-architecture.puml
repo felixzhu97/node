@@ -1,0 +1,132 @@
+@startuml 数据架构图
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js 数据架构图 (TOGAF Data Architecture)
+
+package "数据源层" {
+  [JavaScript源代码] as JSSource
+  [C++绑定代码] as CppBindings
+  [配置文件] as ConfigFiles
+  [包元数据] as PackageMetadata
+}
+
+package "数据实体层" {
+  [代码数据] as CodeData
+  [模块代码] as ModuleCode
+  [内置模块] as BuiltinModules
+  [原生插件] as NativeModules
+  [配置数据] as ConfigData
+  [package.json] as PackageJson
+  [node_modules结构] as NodeModules
+  [环境变量] as EnvVars
+  [运行时数据] as RuntimeData
+  [Buffer数据] as BufferData
+  [Stream数据] as StreamData
+  [Event数据] as EventData
+  [对象实例] as ObjectInstances
+  [元数据] as Metadata
+  [版本信息] as VersionInfo
+  [ABI信息] as ABIInfo
+  [构建信息] as BuildInfo
+}
+
+package "数据流层" {
+  [模块加载流程] as ModuleLoadFlow
+  [数据序列化] as DataSerialization
+  [流处理管道] as StreamPipeline
+  [数据转换] as DataTransform
+}
+
+package "数据存储层" {
+  [文件系统] as FileSystem
+  [内存管理] as MemoryManagement
+  [缓存机制] as CacheMechanism
+  [快照存储] as SnapshotStorage
+}
+
+' 数据源到实体
+JSSource --> ModuleCode
+CppBindings --> NativeModules
+ConfigFiles --> PackageJson
+PackageMetadata --> PackageJson
+
+' 数据实体关系
+CodeData --> ModuleCode
+CodeData --> BuiltinModules
+CodeData --> NativeModules
+ModuleCode --> BuiltinModules
+BuiltinModules --> NativeModules
+ConfigData --> PackageJson
+ConfigData --> NodeModules
+ConfigData --> EnvVars
+PackageJson --> NodeModules
+NodeModules --> EnvVars
+RuntimeData --> BufferData
+RuntimeData --> StreamData
+RuntimeData --> EventData
+RuntimeData --> ObjectInstances
+BufferData --> StreamData
+StreamData --> EventData
+EventData --> ObjectInstances
+Metadata --> VersionInfo
+Metadata --> ABIInfo
+Metadata --> BuildInfo
+VersionInfo --> ABIInfo
+ABIInfo --> BuildInfo
+
+' 数据流关系
+ModuleLoadFlow --> ModuleCode
+ModuleLoadFlow --> PackageJson
+DataSerialization --> BufferData
+DataSerialization --> ObjectInstances
+StreamPipeline --> StreamData
+DataTransform --> BufferData
+DataTransform --> StreamData
+
+' 数据存储关系
+FileSystem --> ModuleCode
+FileSystem --> PackageJson
+FileSystem --> ConfigFiles
+MemoryManagement --> BufferData
+MemoryManagement --> ObjectInstances
+CacheMechanism --> ModuleCode
+CacheMechanism --> BuiltinModules
+SnapshotStorage --> ModuleCode
+SnapshotStorage --> ObjectInstances
+
+' 数据流到存储
+ModuleLoadFlow --> FileSystem
+ModuleLoadFlow --> CacheMechanism
+DataSerialization --> MemoryManagement
+StreamPipeline --> MemoryManagement
+DataTransform --> MemoryManagement
+
+note right of ModuleLoadFlow
+  **模块加载流程**
+  1. 解析模块路径
+  2. 检查缓存
+  3. 加载文件内容
+  4. 编译执行
+  5. 缓存模块
+end note
+
+note right of StreamPipeline
+  **流处理管道**
+  - 可读流 (Readable)
+  - 可写流 (Writable)
+  - 双工流 (Duplex)
+  - 转换流 (Transform)
+end note
+
+note right of MemoryManagement
+  **内存管理**
+  - V8堆管理
+  - Buffer池化
+  - 垃圾回收
+  - 内存追踪
+end note
+
+@enduml
+

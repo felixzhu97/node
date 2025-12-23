@@ -1,0 +1,86 @@
+@startuml 业务架构图
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js 业务架构图 (TOGAF Business Architecture)
+
+package "业务能力层" {
+  [JavaScript运行时服务] as RuntimeService
+  [包管理生态系统] as PackageEcosystem
+  [开发者社区支持] as CommunitySupport
+  [跨平台支持能力] as CrossPlatform
+}
+
+package "业务流程层" {
+  [应用开发流程] as DevProcess
+  [包发布流程] as PublishProcess
+  [问题处理流程] as IssueProcess
+  [版本发布流程] as ReleaseProcess
+}
+
+package "业务角色层" {
+  [开发者] as Developers
+  [维护者] as Maintainers
+  [TSC技术委员会] as TSC
+  [协作者] as Collaborators
+  [问题分类员] as Triagers
+  [发布团队] as ReleaseTeam
+}
+
+package "业务价值层" {
+  [跨平台JavaScript执行] as CrossPlatformExec
+  [生态系统支持] as EcosystemSupport
+  [长期维护保障] as LongTermSupport
+  [开放治理模式] as OpenGovernance
+}
+
+' 业务能力关系
+RuntimeService --> DevProcess
+PackageEcosystem --> PublishProcess
+CommunitySupport --> IssueProcess
+CrossPlatform --> ReleaseProcess
+
+' 业务流程关系
+DevProcess --> Developers
+PublishProcess --> Maintainers
+IssueProcess --> Triagers
+ReleaseProcess --> ReleaseTeam
+
+' 业务角色关系
+Developers --> CrossPlatformExec
+Maintainers --> EcosystemSupport
+TSC --> LongTermSupport
+Collaborators --> OpenGovernance
+Triagers --> IssueProcess
+ReleaseTeam --> ReleaseProcess
+
+' 业务价值关系
+CrossPlatformExec --> RuntimeService
+EcosystemSupport --> PackageEcosystem
+LongTermSupport --> CommunitySupport
+OpenGovernance --> TSC
+
+note right of RuntimeService
+  **核心业务能力**
+  - 提供JavaScript运行时环境
+  - 支持异步I/O模型
+  - 事件驱动架构
+end note
+
+note right of TSC
+  **治理结构**
+  - 技术决策委员会
+  - 架构指导
+  - 战略方向
+end note
+
+note right of LongTermSupport
+  **LTS支持**
+  - 每两年发布LTS版本
+  - 18个月维护期
+  - 安全更新保障
+end note
+
+@enduml
+

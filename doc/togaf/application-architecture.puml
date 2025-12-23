@@ -1,0 +1,110 @@
+@startuml 应用架构图
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js 应用架构图 (TOGAF Application Architecture)
+
+package "应用接口层" {
+  [HTTP/HTTPS模块] as HTTP
+  [文件系统模块] as FS
+  [加密模块] as Crypto
+  [流处理模块] as Stream
+  [网络模块] as Net
+  [进程管理] as Process
+  [集群模块] as Cluster
+  [工作线程] as WorkerThreads
+}
+
+package "核心应用层" {
+  [模块系统] as ModuleSystem
+  [CommonJS] as CJS
+  [ESM模块] as ESM
+  [事件系统] as EventSystem
+  [异步钩子] as AsyncHooks
+  [缓冲区管理] as Buffer
+  [URL处理] as URL
+  [路径处理] as Path
+  [定时器] as Timers
+}
+
+package "应用服务层" {
+  [DNS服务] as DNS
+  [TLS/SSL服务] as TLS
+  [子进程管理] as ChildProcess
+  [REPL服务] as REPL
+  [调试器] as Inspector
+  [性能监控] as PerfHooks
+  [测试框架] as TestRunner
+}
+
+package "应用集成层" {
+  [N-API接口] as NAPI
+  [原生插件] as NativeAddons
+  [Web API兼容] as WebAPI
+  [WASI支持] as WASI
+}
+
+' 应用接口层依赖
+HTTP --> Net
+HTTP --> TLS
+FS --> Stream
+Crypto --> Buffer
+Cluster --> ChildProcess
+WorkerThreads --> EventSystem
+
+' 核心应用层依赖
+ModuleSystem --> EventSystem
+CJS --> ModuleSystem
+ESM --> ModuleSystem
+EventSystem --> AsyncHooks
+Buffer --> Stream
+URL --> Path
+
+' 应用服务层依赖
+DNS --> Net
+TLS --> Crypto
+ChildProcess --> Process
+REPL --> ModuleSystem
+Inspector --> EventSystem
+PerfHooks --> EventSystem
+TestRunner --> ModuleSystem
+
+' 应用集成层依赖
+NAPI --> Process
+NativeAddons --> NAPI
+WebAPI --> EventSystem
+WASI --> Process
+
+' 跨层依赖
+HTTP --> EventSystem
+FS --> EventSystem
+Crypto --> EventSystem
+Stream --> EventSystem
+Net --> EventSystem
+Process --> EventSystem
+
+note right of ModuleSystem
+  **模块加载机制**
+  - CommonJS: require()
+  - ESM: import/export
+  - 模块缓存机制
+  - 循环依赖处理
+end note
+
+note right of EventSystem
+  **事件驱动核心**
+  - EventEmitter模式
+  - 异步事件处理
+  - 事件循环集成
+end note
+
+note right of NAPI
+  **原生扩展接口**
+  - 稳定的C API
+  - 版本管理
+  - 跨版本兼容
+end note
+
+@enduml
+
