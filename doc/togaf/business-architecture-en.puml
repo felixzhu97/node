@@ -1,0 +1,86 @@
+@startuml Business Architecture
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js Business Architecture (TOGAF Business Architecture)
+
+package "Business Capability Layer" {
+  [JavaScript Runtime Service] as RuntimeService
+  [Package Management Ecosystem] as PackageEcosystem
+  [Developer Community Support] as CommunitySupport
+  [Cross-Platform Support Capability] as CrossPlatform
+}
+
+package "Business Process Layer" {
+  [Application Development Process] as DevProcess
+  [Package Publishing Process] as PublishProcess
+  [Issue Handling Process] as IssueProcess
+  [Release Process] as ReleaseProcess
+}
+
+package "Business Role Layer" {
+  [Developers] as Developers
+  [Maintainers] as Maintainers
+  [TSC Technical Committee] as TSC
+  [Collaborators] as Collaborators
+  [Triagers] as Triagers
+  [Release Team] as ReleaseTeam
+}
+
+package "Business Value Layer" {
+  [Cross-Platform JavaScript Execution] as CrossPlatformExec
+  [Ecosystem Support] as EcosystemSupport
+  [Long-Term Support] as LongTermSupport
+  [Open Governance Model] as OpenGovernance
+}
+
+' Business Capability Relationships
+RuntimeService --> DevProcess
+PackageEcosystem --> PublishProcess
+CommunitySupport --> IssueProcess
+CrossPlatform --> ReleaseProcess
+
+' Business Process Relationships
+DevProcess --> Developers
+PublishProcess --> Maintainers
+IssueProcess --> Triagers
+ReleaseProcess --> ReleaseTeam
+
+' Business Role Relationships
+Developers --> CrossPlatformExec
+Maintainers --> EcosystemSupport
+TSC --> LongTermSupport
+Collaborators --> OpenGovernance
+Triagers --> IssueProcess
+ReleaseTeam --> ReleaseProcess
+
+' Business Value Relationships
+CrossPlatformExec --> RuntimeService
+EcosystemSupport --> PackageEcosystem
+LongTermSupport --> CommunitySupport
+OpenGovernance --> TSC
+
+note right of RuntimeService
+  **Core Business Capabilities**
+  - Provides JavaScript runtime environment
+  - Supports asynchronous I/O model
+  - Event-driven architecture
+end note
+
+note right of TSC
+  **Governance Structure**
+  - Technical decision committee
+  - Architecture guidance
+  - Strategic direction
+end note
+
+note right of LongTermSupport
+  **LTS Support**
+  - LTS releases every two years
+  - 18 months maintenance period
+  - Security update guarantee
+end note
+
+@enduml
+

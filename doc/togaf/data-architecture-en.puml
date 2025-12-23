@@ -1,0 +1,132 @@
+@startuml Data Architecture
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js Data Architecture (TOGAF Data Architecture)
+
+package "Data Source Layer" {
+  [JavaScript Source Code] as JSSource
+  [C++ Binding Code] as CppBindings
+  [Configuration Files] as ConfigFiles
+  [Package Metadata] as PackageMetadata
+}
+
+package "Data Entity Layer" {
+  [Code Data] as CodeData
+  [Module Code] as ModuleCode
+  [Built-in Modules] as BuiltinModules
+  [Native Modules] as NativeModules
+  [Configuration Data] as ConfigData
+  [package.json] as PackageJson
+  [node_modules Structure] as NodeModules
+  [Environment Variables] as EnvVars
+  [Runtime Data] as RuntimeData
+  [Buffer Data] as BufferData
+  [Stream Data] as StreamData
+  [Event Data] as EventData
+  [Object Instances] as ObjectInstances
+  [Metadata] as Metadata
+  [Version Information] as VersionInfo
+  [ABI Information] as ABIInfo
+  [Build Information] as BuildInfo
+}
+
+package "Data Flow Layer" {
+  [Module Loading Flow] as ModuleLoadFlow
+  [Data Serialization] as DataSerialization
+  [Stream Processing Pipeline] as StreamPipeline
+  [Data Transformation] as DataTransform
+}
+
+package "Data Storage Layer" {
+  [File System] as FileSystem
+  [Memory Management] as MemoryManagement
+  [Cache Mechanism] as CacheMechanism
+  [Snapshot Storage] as SnapshotStorage
+}
+
+' Data Source to Entity
+JSSource --> ModuleCode
+CppBindings --> NativeModules
+ConfigFiles --> PackageJson
+PackageMetadata --> PackageJson
+
+' Data Entity Relationships
+CodeData --> ModuleCode
+CodeData --> BuiltinModules
+CodeData --> NativeModules
+ModuleCode --> BuiltinModules
+BuiltinModules --> NativeModules
+ConfigData --> PackageJson
+ConfigData --> NodeModules
+ConfigData --> EnvVars
+PackageJson --> NodeModules
+NodeModules --> EnvVars
+RuntimeData --> BufferData
+RuntimeData --> StreamData
+RuntimeData --> EventData
+RuntimeData --> ObjectInstances
+BufferData --> StreamData
+StreamData --> EventData
+EventData --> ObjectInstances
+Metadata --> VersionInfo
+Metadata --> ABIInfo
+Metadata --> BuildInfo
+VersionInfo --> ABIInfo
+ABIInfo --> BuildInfo
+
+' Data Flow Relationships
+ModuleLoadFlow --> ModuleCode
+ModuleLoadFlow --> PackageJson
+DataSerialization --> BufferData
+DataSerialization --> ObjectInstances
+StreamPipeline --> StreamData
+DataTransform --> BufferData
+DataTransform --> StreamData
+
+' Data Storage Relationships
+FileSystem --> ModuleCode
+FileSystem --> PackageJson
+FileSystem --> ConfigFiles
+MemoryManagement --> BufferData
+MemoryManagement --> ObjectInstances
+CacheMechanism --> ModuleCode
+CacheMechanism --> BuiltinModules
+SnapshotStorage --> ModuleCode
+SnapshotStorage --> ObjectInstances
+
+' Data Flow to Storage
+ModuleLoadFlow --> FileSystem
+ModuleLoadFlow --> CacheMechanism
+DataSerialization --> MemoryManagement
+StreamPipeline --> MemoryManagement
+DataTransform --> MemoryManagement
+
+note right of ModuleLoadFlow
+  **Module Loading Flow**
+  1. Parse module path
+  2. Check cache
+  3. Load file content
+  4. Compile and execute
+  5. Cache module
+end note
+
+note right of StreamPipeline
+  **Stream Processing Pipeline**
+  - Readable stream
+  - Writable stream
+  - Duplex stream
+  - Transform stream
+end note
+
+note right of MemoryManagement
+  **Memory Management**
+  - V8 heap management
+  - Buffer pooling
+  - Garbage collection
+  - Memory tracking
+end note
+
+@enduml
+

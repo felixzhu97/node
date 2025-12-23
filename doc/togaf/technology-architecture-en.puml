@@ -1,0 +1,152 @@
+@startuml Technology Architecture
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js Technology Architecture (TOGAF Technology Architecture)
+
+package "Application Technology Layer" {
+  [Node.js Core] as NodeCore
+  [JavaScript API] as JSAPI
+  [Built-in Modules] as BuiltinModules
+}
+
+package "Runtime Technology Layer" {
+  [V8 JavaScript Engine] as V8Engine
+  [JIT Compiler] as JITCompiler
+  [Garbage Collector] as GC
+  [Snapshot Mechanism] as Snapshot
+  [libuv Event Loop] as Libuv
+  [Event Loop] as EventLoop
+  [Thread Pool] as ThreadPool
+  [Asynchronous I/O] as AsyncIO
+  [N-API Binding Layer] as NAPI
+  [C++ Bindings] as CppBindings
+  [Native Interface] as NativeInterface
+}
+
+package "System Technology Layer" {
+  [Operating System Interface] as OSInterface
+  [Linux Interface] as LinuxAPI
+  [Windows Interface] as WindowsAPI
+  [macOS Interface] as MacOSAPI
+  [Network Protocol Stack] as NetworkStack
+  [TCP/UDP] as TCPUDP
+  [HTTP/HTTPS] as HTTPStack
+  [TLS/SSL] as TLSStack
+  [File System Interface] as FSInterface
+  [File Operations] as FileOps
+  [Directory Operations] as DirOps
+  [File Watching] as FileWatch
+}
+
+package "Infrastructure Layer" {
+  [Build System] as BuildSystem
+  [GYP Build] as GYP
+  [GN Build] as GN
+  [CMake] as CMake
+  [Test Framework] as TestFramework
+  [Unit Testing] as UnitTest
+  [Integration Testing] as IntegrationTest
+  [Benchmark] as Benchmark
+  [CI/CD System] as CICD
+  [Continuous Integration] as CI
+  [Continuous Deployment] as CD
+  [Automated Testing] as AutoTest
+}
+
+package "Technology Standard Layer" {
+  [ECMAScript Standard] as ECMAScript
+  [HTTP Standard] as HTTPStandard
+  [TLS Standard] as TLSStandard
+  [Web Standard] as WebStandard
+}
+
+' Application Technology Layer Dependencies
+NodeCore --> JSAPI
+JSAPI --> BuiltinModules
+BuiltinModules --> V8Engine
+BuiltinModules --> Libuv
+
+' Runtime Technology Layer Dependencies
+V8Engine --> JITCompiler
+V8Engine --> GC
+V8Engine --> Snapshot
+Libuv --> EventLoop
+Libuv --> ThreadPool
+Libuv --> AsyncIO
+NAPI --> CppBindings
+NAPI --> NativeInterface
+CppBindings --> V8Engine
+NativeInterface --> Libuv
+
+' System Technology Layer Dependencies
+OSInterface --> LinuxAPI
+OSInterface --> WindowsAPI
+OSInterface --> MacOSAPI
+NetworkStack --> TCPUDP
+NetworkStack --> HTTPStack
+NetworkStack --> TLSStack
+FSInterface --> FileOps
+FSInterface --> DirOps
+FSInterface --> FileWatch
+
+Libuv --> OSInterface
+Libuv --> NetworkStack
+Libuv --> FSInterface
+NodeCore --> OSInterface
+
+' Infrastructure Layer Dependencies
+BuildSystem --> GYP
+BuildSystem --> GN
+BuildSystem --> CMake
+TestFramework --> UnitTest
+TestFramework --> IntegrationTest
+TestFramework --> Benchmark
+CICD --> CI
+CICD --> CD
+CICD --> AutoTest
+BuildSystem --> NodeCore
+TestFramework --> NodeCore
+CICD --> TestFramework
+
+' Technology Standard Layer Relationships
+ECMAScript --> V8Engine
+HTTPStandard --> HTTPStack
+TLSStandard --> TLSStack
+WebStandard --> JSAPI
+
+note right of V8Engine
+  **V8 Engine Features**
+  - Just-In-Time compilation (JIT)
+  - Optimized garbage collection
+  - Snapshot startup optimization
+  - Multi-generational GC strategy
+end note
+
+note right of Libuv
+  **libuv Event Loop**
+  - Cross-platform asynchronous I/O
+  - Thread pool management
+  - File system operations
+  - Network I/O abstraction
+end note
+
+note right of BuildSystem
+  **Build System**
+  - GYP: Traditional build system
+  - GN: Modern build system
+  - Multi-platform support
+  - Incremental builds
+end note
+
+note right of OSInterface
+  **Cross-Platform Support**
+  - Linux: epoll
+  - Windows: IOCP
+  - macOS: kqueue
+  - Unified abstraction interface
+end note
+
+@enduml
+

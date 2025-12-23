@@ -1,0 +1,110 @@
+@startuml Application Architecture
+!theme plain
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title Node.js Application Architecture (TOGAF Application Architecture)
+
+package "Application Interface Layer" {
+  [HTTP/HTTPS Module] as HTTP
+  [File System Module] as FS
+  [Crypto Module] as Crypto
+  [Stream Processing Module] as Stream
+  [Network Module] as Net
+  [Process Management] as Process
+  [Cluster Module] as Cluster
+  [Worker Threads] as WorkerThreads
+}
+
+package "Core Application Layer" {
+  [Module System] as ModuleSystem
+  [CommonJS] as CJS
+  [ESM Module] as ESM
+  [Event System] as EventSystem
+  [Async Hooks] as AsyncHooks
+  [Buffer Management] as Buffer
+  [URL Processing] as URL
+  [Path Processing] as Path
+  [Timers] as Timers
+}
+
+package "Application Service Layer" {
+  [DNS Service] as DNS
+  [TLS/SSL Service] as TLS
+  [Child Process Management] as ChildProcess
+  [REPL Service] as REPL
+  [Debugger] as Inspector
+  [Performance Monitoring] as PerfHooks
+  [Test Framework] as TestRunner
+}
+
+package "Application Integration Layer" {
+  [N-API Interface] as NAPI
+  [Native Addons] as NativeAddons
+  [Web API Compatibility] as WebAPI
+  [WASI Support] as WASI
+}
+
+' Application Interface Layer Dependencies
+HTTP --> Net
+HTTP --> TLS
+FS --> Stream
+Crypto --> Buffer
+Cluster --> ChildProcess
+WorkerThreads --> EventSystem
+
+' Core Application Layer Dependencies
+ModuleSystem --> EventSystem
+CJS --> ModuleSystem
+ESM --> ModuleSystem
+EventSystem --> AsyncHooks
+Buffer --> Stream
+URL --> Path
+
+' Application Service Layer Dependencies
+DNS --> Net
+TLS --> Crypto
+ChildProcess --> Process
+REPL --> ModuleSystem
+Inspector --> EventSystem
+PerfHooks --> EventSystem
+TestRunner --> ModuleSystem
+
+' Application Integration Layer Dependencies
+NAPI --> Process
+NativeAddons --> NAPI
+WebAPI --> EventSystem
+WASI --> Process
+
+' Cross-Layer Dependencies
+HTTP --> EventSystem
+FS --> EventSystem
+Crypto --> EventSystem
+Stream --> EventSystem
+Net --> EventSystem
+Process --> EventSystem
+
+note right of ModuleSystem
+  **Module Loading Mechanism**
+  - CommonJS: require()
+  - ESM: import/export
+  - Module caching mechanism
+  - Circular dependency handling
+end note
+
+note right of EventSystem
+  **Event-Driven Core**
+  - EventEmitter pattern
+  - Asynchronous event handling
+  - Event loop integration
+end note
+
+note right of NAPI
+  **Native Extension Interface**
+  - Stable C API
+  - Version management
+  - Cross-version compatibility
+end note
+
+@enduml
+
